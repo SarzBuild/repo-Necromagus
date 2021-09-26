@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
-    
+    public Camera mainCamera;
     private bool lockPlayer;
     public bool cursorVisibility;
     
     private static PlayerControls _instance;
-
-    public static PlayerControls Instance
-    {
-        get { return _instance; }
-    }
+    public static PlayerControls Instance { get { return _instance; } }
 
     private void Awake()
     {
@@ -28,6 +24,34 @@ public class PlayerControls : MonoBehaviour
         Time.timeScale = 1;
     }
     
+    public Vector3 GetMousePos()
+    {
+        if (!lockPlayer)
+        {
+            if (!cursorVisibility)
+            {
+                Vector3 vec = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                vec.z = 0f;
+                return vec;
+            }
+        }
+        var nullableVector3 = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        nullableVector3.z = 0f;
+        return nullableVector3;
+    }
+    
+    public bool GetMovingUpD()
+    {
+        if (!lockPlayer)
+        {
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public bool GetMovingUp()
     {
         if (!lockPlayer)
@@ -39,6 +63,8 @@ public class PlayerControls : MonoBehaviour
         }
         return false;
     }
+    
+    
     public bool GetMovingRight()
     {
         if (!lockPlayer)
