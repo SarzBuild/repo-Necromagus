@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PlayerSwapManager : MonoBehaviour
+public class PlayerSwapManager : MonoBehaviour
 {
-    public enum CorpsePosition
+    [SerializeField]private List<GameObject> _bodyList = new List<GameObject>();
+
+    public void SubscibeBody(GameObject body)
     {
-        OUTSIDE,
-        CORPSE1,
-        CORPSE2,
-        CORPSE3,
-        CORPSE4
+        if(!_bodyList.Contains(body))
+            _bodyList.Add(body);
     }
 
-    public CorpsePosition corpsePosition;
-    
+    public void UnsubscribeBody(GameObject body)
+    {
+        if (_bodyList.Contains(body))
+            _bodyList.Remove(body);
+    }
+
 }

@@ -12,9 +12,9 @@ public class CheckpointManager : MonoBehaviour
         
     }
 
-    public void UpdateCheckpoint()
+    public void UpdateCheckpoint(Vector3 checkpointPos)
     {
-        
+        lastCheckpointReached = checkpointPos;
     }
 
     private void OnLoopStart()

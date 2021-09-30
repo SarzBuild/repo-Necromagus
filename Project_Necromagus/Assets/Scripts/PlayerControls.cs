@@ -115,7 +115,7 @@ public class PlayerControls : MonoBehaviour
     {
         if (!lockPlayer)
         {
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKey(KeyCode.Space))
             {
                 return true;
             }

@@ -1,143 +1,186 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     private PlayerControls _playerControls;
+    
+    [Header("Time Loop Count")]
+    private int _currentTimeLoop;
 
-    private int currentTimeloop;
-    [SerializeField] private float speed = 4;
-    private Vector3 moveTowardsPos;
-    public float jumpAndFallVelocity = 1;
-    private float clickInteractionDistance;
-    private float holdInteractionDistance;
-    public LayerMask groundLayerMask;
-    public float gravity;
-    public float jumpForce = 100f;
-    public float jumpingSpeed = 1f;
-    public bool jumping;
-    private float timer;
+    [Header("Physics Related")] 
+    public float JumpAndFallVelocity;
+    public float Gravity = -9.8f;
+    public float JumpForce = 15f;
+    public float JumpingSpeed = 1f;
+    public LayerMask GroundLayerMask;
+    public float ExtraDistanceValue = 0.34f;
+    private float _movingSpeed = 4;
+    private Vector3 _moveTowardsPos;
+    
+    [Header("Sprite Leaning")]
+    public Vector3 Center = Vector3.zero;
+    public Vector3 Lean = new Vector3(0f, 0f, 5f);
+    public Vector3 Lean2 = new Vector3(0f, 0f, 355f);
 
-    private Rigidbody2D rb2d;
-    public Collider2D collider2d;
-    private Transform childTransform;
-    private SpriteRenderer childRenderer;
+    [Header("Interaction Related")]
+    public LayerMask InteractionLayerMask;
+    public TMPro.TextMeshProUGUI InteractionText;
+    private float _clickInteractionDistance;
+    private float _holdInteractionDistance;
+
+    [Header("Components")]
+    public Collider2D Collider2D;
+    private Rigidbody2D _rigidbody2D;
+    private Transform _childTransform;
+    private SpriteRenderer _childSpriteRenderer;
     
-    public Vector3 center = Vector3.zero;
-    public Vector3 lean = new Vector3(0f, 0f, 5f);
-    public Vector3 lean2 = new Vector3(0f, 0f, 355f);
+
+    private bool _coroutineRunning;
     
-    public LayerMask interactionLayerMask;
-    public TMPro.TextMeshProUGUI interactionText;
+    private void Awake()
+    {
+        _rigidbody2D = GetComponent<Rigidbody2D>();
+        Collider2D = GetComponent<Collider2D>();
+        _childTransform = transform.GetChild(0).GetComponent<Transform>();
+        _childSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        
+    }
     
-    void Start()
+    private void Start()
     {
         _playerControls = PlayerControls.Instance;
-
-        rb2d = GetComponent<Rigidbody2D>();
-        collider2d = GetComponent<Collider2D>();
-        childTransform = transform.GetChild(0).GetComponent<Transform>();
-        childRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         HandleMovement();
         HandleFall();
+        DecreaseJumpSpeed();
+    }
+
+    private void Update()
+    {
         CheckForInteractionObject();
     }
 
-    void HandleMovement()
+    private void HandleMovement()
     {
-        Vector3 moveDirection = new Vector3(0, 0, 0);
+        Vector2 moveDirection = new Vector2(0, 0);
         if (_playerControls.GetMovingUp())
             HandleJump();
-        //if (_playerControls.GetMovingDown()) 
         if (_playerControls.GetMovingLeft())
         {
             moveDirection.x = -1;
-            HandleLean(true, lean2);
+            HandleLean(true, Lean2);
         }
         if (_playerControls.GetMovingRight())
         {
             moveDirection.x = +1;
-            HandleLean(false, lean);
+            HandleLean(false, Lean);
         }
         moveDirection.Normalize();
-        if (moveDirection == Vector3.zero)
+        if (moveDirection == Vector2.zero)
         {
-            childTransform.eulerAngles = center;
+            _childTransform.eulerAngles = Center;
         }
-        moveTowardsPos = new Vector3(moveDirection.x * speed * jumpingSpeed, jumpAndFallVelocity, moveDirection.z * speed);
-        rb2d.velocity = moveTowardsPos;
+        _moveTowardsPos = new Vector2(moveDirection.x * _movingSpeed * JumpingSpeed, JumpAndFallVelocity);
+        _rigidbody2D.velocity = _moveTowardsPos;
     }
 
-    void HandleLean(bool flipX, Vector3 lean)
+    private void HandleLean(bool flipX, Vector3 lean)
     {
-        childRenderer.flipX = flipX;
-        if (Vector3.Distance(childTransform.eulerAngles, lean) > 0.01f)
-            childTransform.eulerAngles = Vector3.Lerp(childTransform.rotation.eulerAngles, -lean, 4f);
+        _childSpriteRenderer.flipX = flipX;
+        if (Vector3.Distance(_childTransform.eulerAngles, lean) > 0.01f)
+            _childTransform.eulerAngles = Vector3.Lerp(_childTransform.rotation.eulerAngles, -lean, 4f);
     }
 
-    void HandleFall()
+    private IEnumerator DecreaseJumpSpeedIEnumerator()
     {
-        if (!CheckIfGrounded() || jumping)
-            jumpAndFallVelocity += (gravity * speed/2) * Time.deltaTime;
-        if (jumping)
+        _coroutineRunning = true;
+        JumpingSpeed = 1.5f;
+        yield return new WaitForSeconds(1f);
+        _coroutineRunning = false;
+    }
+    
+    private void DecreaseJumpSpeed()
+    {
+        if (_coroutineRunning)
+            if (JumpingSpeed > 1f)
+                JumpingSpeed -= Time.fixedDeltaTime*0.5f;
+            else
+                JumpingSpeed = 1f;
+    }
+    
+    private void ResetJumpVariablesAndCr()
+    {
+        JumpAndFallVelocity = 0f;
+        JumpingSpeed = 1f;
+        if (_coroutineRunning)
         {
-            timer += Time.deltaTime;
-            if (timer >= 0.5f)
-            {
-                jumping = false;
-                timer = 0f;
-            }
-            jumpingSpeed = 1.5f;
+            StopCoroutine(DecreaseJumpSpeedIEnumerator());
+            _coroutineRunning = false;
         }
+    }
+
+    private void HandleFall()
+    {
+        if (!CheckIfGrounded())
+            JumpAndFallVelocity += (Gravity * _movingSpeed/2) * Time.deltaTime;
         else if (CheckIfGrounded())
-            jumpAndFallVelocity = 0f;
-        else
         {
-            jumpingSpeed = 1f;
+            if (JumpAndFallVelocity <= 0f)
+            {
+                ResetJumpVariablesAndCr();
+            }
+            else if (CheckCeilingCollision())
+            {
+                ResetJumpVariablesAndCr();
+            }
         }
     }
 
-    void HandleJump()
+    private void HandleJump()
     {
         if (CheckIfGrounded())
         {
-            if (jumpAndFallVelocity < 0.1)
+            if (JumpAndFallVelocity < 0.1)
             {
-                jumping = true;
-                jumpAndFallVelocity += (speed * jumpForce) * 0.2f;
+                StartCoroutine(DecreaseJumpSpeedIEnumerator());
+                JumpAndFallVelocity += (_movingSpeed * JumpForce) * 0.2f;
             }
         }
     }
 
-
-    void CheckForInteractionObject()
+    private void CheckForInteractionObject()
     {
         Vector2 ray = _playerControls.GetMousePos();
-        RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero, Mathf.Infinity, interactionLayerMask);
+        RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero, Mathf.Infinity, InteractionLayerMask);
         var successfulHit = false;
-        if (hit)
+        if (hit) 
         {
             Interactable interactable = hit.collider.GetComponent<Interactable>();
             if (interactable != null)
             {
                 HandleInteraction(interactable);
-                interactionText.text = interactable.GetDescription();
+                InteractionText.text = interactable.GetDescription();
                 var offset = new Vector2(0f,1.5f);
-                interactionText.transform.position = (ray + offset);
+                if ((Vector2)InteractionText.transform.position != (ray + offset))
+                {
+                    InteractionText.transform.position = (ray + offset);
+                }
                 successfulHit = true;
             }
         }
         if (!successfulHit)
-            interactionText.text = "";
+            InteractionText.text = "";
     }
     
-    void HandleInteraction(Interactable interactable)
+    private void HandleInteraction(Interactable interactable)
     {
         switch (interactable.interactionType)
         {
@@ -145,7 +188,7 @@ public class PlayerController : MonoBehaviour
                 interactable.Interact();
                 break;
             case Interactable.InteractionType.CLICK:
-                if (_playerControls.GetInteraction())
+                if (_playerControls.GetLeftClick())
                 {
                     interactable.Interact();
                 }
@@ -153,18 +196,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    bool CheckIfGrounded()
+    private RaycastHit2D CollisionCheck(float angle, Vector2 direction)
     {
-        float extraDistanceValue = 0.65f;
         RaycastHit2D hit = Physics2D.BoxCast(
-            collider2d.bounds.center, 
-            collider2d.bounds.size / 1.5f, 
-            0f, 
-            Vector2.down,
-            extraDistanceValue,
-            groundLayerMask
-            );
-        return hit.collider != null;
+            Collider2D.bounds.center, 
+            Collider2D.bounds.size / 1.5f, 
+            angle, 
+            direction,
+            ExtraDistanceValue,
+            GroundLayerMask
+        );
+        return hit;
     }
 
+    private bool CheckIfGrounded()
+    { 
+        return CollisionCheck(0f, Vector2.down).collider != null;
+    }
+
+    private bool CheckCeilingCollision()
+    {
+        return CollisionCheck(0f, Vector2.up).collider != null;
+    }
 }

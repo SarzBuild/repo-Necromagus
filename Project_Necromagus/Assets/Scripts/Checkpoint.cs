@@ -17,7 +17,7 @@ public class Checkpoint : MonoBehaviour
     {
         if ((playerLayer.value & (1 << other.gameObject.layer)) > 0)
         {
-            _checkpointManager.lastCheckpointReached = transform.position;
+            _checkpointManager.UpdateCheckpoint(transform.position);
         }
     }
 }
