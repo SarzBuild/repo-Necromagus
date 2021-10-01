@@ -13,6 +13,7 @@ public class GroundCollision : MonoBehaviour
     public float speed = 4f;
     public Collider2D collider2d;
     public LayerMask groundLayerMask;
+    public float extraDistanceValue = 0.35f;
 
     private void Awake()
     {
@@ -42,7 +43,6 @@ public class GroundCollision : MonoBehaviour
     
     bool CheckIfGrounded()
     {
-        float extraDistanceValue = 0.65f;
         RaycastHit2D hit = Physics2D.BoxCast(
             collider2d.bounds.center, 
             collider2d.bounds.size / 1.5f, 

@@ -8,9 +8,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private PlayerControls _playerControls;
-    
-    [Header("Time Loop Count")]
-    private int _currentTimeLoop;
 
     [Header("Physics Related")] 
     public float JumpAndFallVelocity;
@@ -73,16 +70,11 @@ public class PlayerController : MonoBehaviour
         Vector2 moveDirection = new Vector2(0, 0);
         if (_playerControls.GetMovingUp())
             HandleJump();
-        if (_playerControls.GetMovingLeft())
-        {
-            moveDirection.x = -1;
+        moveDirection.x = -(_playerControls.GetMovingLeft()) + (_playerControls.GetMovingRight());
+        if(moveDirection.x == -1)
             HandleLean(true, Lean2);
-        }
-        if (_playerControls.GetMovingRight())
-        {
-            moveDirection.x = +1;
+        if(moveDirection.x == 1)
             HandleLean(false, Lean);
-        }
         moveDirection.Normalize();
         if (moveDirection == Vector2.zero)
         {
@@ -129,15 +121,13 @@ public class PlayerController : MonoBehaviour
 
     private void HandleFall()
     {
+        if (CheckCeilingCollision())
+            ResetJumpVariablesAndCr();
         if (!CheckIfGrounded())
             JumpAndFallVelocity += (Gravity * _movingSpeed/2) * Time.deltaTime;
         else if (CheckIfGrounded())
         {
             if (JumpAndFallVelocity <= 0f)
-            {
-                ResetJumpVariablesAndCr();
-            }
-            else if (CheckCeilingCollision())
             {
                 ResetJumpVariablesAndCr();
             }
@@ -168,7 +158,7 @@ public class PlayerController : MonoBehaviour
             {
                 HandleInteraction(interactable);
                 InteractionText.text = interactable.GetDescription();
-                var offset = new Vector2(0f,1.5f);
+                var offset = new Vector2(0f,1f);
                 if ((Vector2)InteractionText.transform.position != (ray + offset))
                 {
                     InteractionText.transform.position = (ray + offset);
@@ -179,13 +169,18 @@ public class PlayerController : MonoBehaviour
         if (!successfulHit)
             InteractionText.text = "";
     }
-    
+
     private void HandleInteraction(Interactable interactable)
     {
         switch (interactable.interactionType)
         {
-            case Interactable.InteractionType.HOVER:
-                interactable.Interact();
+            case Interactable.InteractionType.E:
+                if (true) //OVERLAP CIRCLE RAYCAST NEAR PLAYER TO CHECK IF POSSIBILITY TO INTERACT WITH STUFF
+                {
+                    //IF TRUE WE SHOW THEM THAT THEY CAN INTERACT WITH IT 
+                    //THEN WE LOOK IF THEY INTERACT WITH IT
+                        //IF SO THEY CALL INTERACT
+                }
                 break;
             case Interactable.InteractionType.CLICK:
                 if (_playerControls.GetLeftClick())
@@ -196,14 +191,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private RaycastHit2D CollisionCheck(float angle, Vector2 direction)
+    private RaycastHit2D CollisionCheck(float angle, Vector2 direction, float extraDistance)
     {
         RaycastHit2D hit = Physics2D.BoxCast(
             Collider2D.bounds.center, 
             Collider2D.bounds.size / 1.5f, 
             angle, 
             direction,
-            ExtraDistanceValue,
+            extraDistance,
             GroundLayerMask
         );
         return hit;
@@ -211,11 +206,11 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckIfGrounded()
     { 
-        return CollisionCheck(0f, Vector2.down).collider != null;
+        return CollisionCheck(0f, Vector2.down, ExtraDistanceValue).collider != null;
     }
 
     private bool CheckCeilingCollision()
     {
-        return CollisionCheck(0f, Vector2.up).collider != null;
+        return CollisionCheck(0f, Vector2.up, ExtraDistanceValue).collider != null;
     }
 }

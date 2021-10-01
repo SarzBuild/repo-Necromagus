@@ -4,7 +4,7 @@ public abstract class Interactable : MonoBehaviour
 {
     public enum InteractionType
     {
-        HOVER,
+        E,
         CLICK
     }
 

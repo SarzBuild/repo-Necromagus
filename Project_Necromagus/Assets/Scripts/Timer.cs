@@ -6,30 +6,32 @@ using UnityEngine;
 public class Timer : MonoBehaviour
 {
     private TextMeshProUGUI timerText;
-    private float timer;
+    public float timer;
     public int currentMaxTime;
     
     
-    void Awake()
+    private void Awake()
     {
         timerText = GetComponent<TextMeshProUGUI>();
+        OnLoopStart();
+    }
+
+    public void OnLoopStart()
+    {
         timer = currentMaxTime;
     }
-    void Update()
+    
+    private void Update()
     {
         Countdown();
     }
 
-    void Countdown()
+    private void Countdown()
     {
         if (timer > 0)
         {
             timer -= Time.deltaTime;
             timerText.text = timer.ToString("00");
-        }
-        else
-        {
-            
         }
     }
     

@@ -1,21 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 public class BodyInteraction : Interactable
 {
-
-    public PlayerSwapManager Body;
+    public PlayerSwapManager PlayerSwapManager;
 
     private void OnEnable()
     {
-        Body.SubscibeBody(transform.parent.gameObject);
+        if (PlayerSwapManager == null)
+        {
+            PlayerSwapManager = PlayerSwapManager.Instance;
+        }
     }
 
-    private void OnDisable()
+    private void GetPlayerSwapManager()
     {
-        Body.UnsubscribeBody(transform.parent.gameObject);
+       if (PlayerSwapManager == null)
+       {
+           PlayerSwapManager = PlayerSwapManager.Instance;
+       } 
     }
+
     public override string GetDescription()
     {
         return "[Left Click] to change body";
@@ -28,6 +35,7 @@ public class BodyInteraction : Interactable
 
     private void ChangeBodyInit()
     {
-        Debug.Log("BigBong");
+        PlayerSwapManager.PlayerSwap(transform.parent.gameObject);
     }
+    
 }

@@ -5,8 +5,10 @@ using UnityEngine;
 public class PlayerControls : MonoBehaviour
 {
     public Camera mainCamera;
-    private bool lockPlayer;
+    public bool lockPlayer;
     public bool cursorVisibility;
+    public bool respawnLock;
+    public int TimeLoopCount;
     
     private static PlayerControls _instance;
     public static PlayerControls Instance { get { return _instance; } }
@@ -39,19 +41,7 @@ public class PlayerControls : MonoBehaviour
         nullableVector3.z = 0f;
         return nullableVector3;
     }
-    
-    public bool GetMovingUpD()
-    {
-        if (!lockPlayer)
-        {
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    
+
     public bool GetMovingUp()
     {
         if (!lockPlayer)
@@ -63,35 +53,35 @@ public class PlayerControls : MonoBehaviour
         }
         return false;
     }
-    
-    
-    public bool GetMovingRight()
+
+    public int GetMovingRight()
     {
         if (!lockPlayer)
         {
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
-                return true;
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
-    public bool GetMovingLeft()
+    public int GetMovingLeft()
     {
         if (!lockPlayer)
         {
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
-                return true;
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
-    public bool GetMovingDown()
+    
+    public bool RespawnKey()
     {
-        if (!lockPlayer)
+        if (!respawnLock)
         {
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            if (Input.GetKeyDown(KeyCode.X))
             {
                 return true;
             }
@@ -122,12 +112,7 @@ public class PlayerControls : MonoBehaviour
         }
         return false;
     }
-    
-    public void SetLockPlayer()
-    {
-        lockPlayer = !lockPlayer;
-    }
-    
+
     public void SetLockPlayerCursorVisibility()
     {
         cursorVisibility = !cursorVisibility;
