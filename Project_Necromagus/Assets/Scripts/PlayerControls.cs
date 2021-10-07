@@ -156,6 +156,15 @@ public class PlayerControls : MonoBehaviour
         return false;
     }
 
+    public bool GetEscape()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            return true;
+        }
+        return false;
+    }
+
     public void SetLockPlayerCursorVisibility()
     {
         cursorVisibility = !cursorVisibility;

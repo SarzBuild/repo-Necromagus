@@ -24,7 +24,7 @@ public class LoopManager : MonoBehaviour
         }
         else if (PlayerControls.RespawnKey())
         {            
-            Timer.timer = 0;
+            RestartLoop();
         }
     }
 
@@ -39,7 +39,7 @@ public class LoopManager : MonoBehaviour
         }
     }
 
-    private void RestartLoop()
+    public void RestartLoop()
     {
         //NEED A COROUTINE
         Time.timeScale = 0;
@@ -54,6 +54,4 @@ public class LoopManager : MonoBehaviour
         PlayerControls.respawnLock = false;
         PlayerControls.TimeLoopCount++;
     }
-
-
 }
