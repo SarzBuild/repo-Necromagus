@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
         Collider2D = GetComponent<Collider2D>();
         _childTransform = transform.GetChild(0).GetComponent<Transform>();
         _childSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        
     }
     
     private void Start()
@@ -67,18 +66,22 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        Vector2 moveDirection = new Vector2(0, 0);
+        Vector2 moveDirection = new Vector2(0f, 0f);
         if (_playerControls.GetMovingUp())
             HandleJump();
+        //var veloc = 0.0f;
+        //Debug.Log(Mathf.SmoothDamp(1f, 0f, ref veloc, 0.3f));
+        //moveDirection.x = -Mathf.SmoothDamp(_playerControls.GetMovingLeft(), 0f, ref JumpAndFallVelocity, 0.3f) + Mathf.SmoothDamp(_playerControls.GetMovingRight(), 0f, ref JumpAndFallVelocity, 0.3f);
         moveDirection.x = -(_playerControls.GetMovingLeft()) + (_playerControls.GetMovingRight());
-        if(moveDirection.x == -1)
+        //Debug.Log(Mathf.Sign(moveDirection.x));
+        if(Mathf.Sign(moveDirection.x) == -1f)
             HandleLean(true, Lean2);
-        if(moveDirection.x == 1)
+        if (Mathf.Sign(moveDirection.x) == 1f && moveDirection.x != 0f) 
             HandleLean(false, Lean);
-        moveDirection.Normalize();
+        //moveDirection.Normalize();
         if (moveDirection == Vector2.zero)
         {
-            _childTransform.eulerAngles = Center;
+            ResetLeanRotation();
         }
         _moveTowardsPos = new Vector2(moveDirection.x * _movingSpeed * JumpingSpeed, JumpAndFallVelocity);
         _rigidbody2D.velocity = _moveTowardsPos;
@@ -87,8 +90,14 @@ public class PlayerController : MonoBehaviour
     private void HandleLean(bool flipX, Vector3 lean)
     {
         _childSpriteRenderer.flipX = flipX;
+        ResetLeanRotation();
         if (Vector3.Distance(_childTransform.eulerAngles, lean) > 0.01f)
-            _childTransform.eulerAngles = Vector3.Lerp(_childTransform.rotation.eulerAngles, -lean, 4f);
+            _childTransform.rotation = Quaternion.Euler(Vector3.Lerp(_childTransform.rotation.eulerAngles, -lean, 4f));
+    }
+
+    private void ResetLeanRotation()
+    {
+        _childTransform.eulerAngles = Center;
     }
 
     private IEnumerator DecreaseJumpSpeedIEnumerator()
@@ -148,22 +157,27 @@ public class PlayerController : MonoBehaviour
 
     private void CheckForInteractionObject()
     {
-        Vector2 ray = _playerControls.GetMousePos();
-        RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero, Mathf.Infinity, InteractionLayerMask);
         var successfulHit = false;
-        if (hit) 
+        if (!(0 > Input.mousePosition.x || 0 > Input.mousePosition.y || Screen.width < Input.mousePosition.x ||
+              Screen.height < Input.mousePosition.y))
         {
-            Interactable interactable = hit.collider.GetComponent<Interactable>();
-            if (interactable != null)
+            Vector2 ray = _playerControls.GetMousePos();
+            RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero, Mathf.Infinity, InteractionLayerMask);
+            if (hit)
             {
-                HandleInteraction(interactable);
-                InteractionText.text = interactable.GetDescription();
-                var offset = new Vector2(0f,1f);
-                if ((Vector2)InteractionText.transform.position != (ray + offset))
+                Interactable interactable = hit.collider.GetComponent<Interactable>();
+                if (interactable != null && (Interactable.InteractionType.CLICK == interactable.interactionType))
                 {
-                    InteractionText.transform.position = (ray + offset);
+                    HandleInteraction(interactable);
+                    InteractionText.text = interactable.GetDescription();
+                    var offset = new Vector2(0f, 1f);
+                    if ((Vector2)InteractionText.transform.position != (ray + offset))
+                    {
+                        InteractionText.transform.position = (ray + offset);
+                    }
+
+                    successfulHit = true;
                 }
-                successfulHit = true;
             }
         }
         if (!successfulHit)
@@ -178,7 +192,10 @@ public class PlayerController : MonoBehaviour
                 if (true) //OVERLAP CIRCLE RAYCAST NEAR PLAYER TO CHECK IF POSSIBILITY TO INTERACT WITH STUFF
                 {
                     //IF TRUE WE SHOW THEM THAT THEY CAN INTERACT WITH IT 
-                    //THEN WE LOOK IF THEY INTERACT WITH IT
+                    /*if (_playerControls.GetInteraction())
+                    {
+                        interactable.Interact();
+                    }*/
                         //IF SO THEY CALL INTERACT
                 }
                 break;

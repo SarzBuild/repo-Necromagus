@@ -18,7 +18,6 @@ public class LoopManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(PlayerControls.RespawnKey());
         if (Timer.timer <= 0)
         {
             PlayerDie();

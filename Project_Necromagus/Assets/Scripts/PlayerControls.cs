@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
@@ -9,7 +11,10 @@ public class PlayerControls : MonoBehaviour
     public bool cursorVisibility;
     public bool respawnLock;
     public int TimeLoopCount;
-    
+    private float _rv;
+    private float _lv;
+    public float Sensitivity;
+
     private static PlayerControls _instance;
     public static PlayerControls Instance { get { return _instance; } }
 
@@ -54,24 +59,36 @@ public class PlayerControls : MonoBehaviour
         return false;
     }
 
-    public int GetMovingRight()
+    public float GetMovingRight()
     {
         if (!lockPlayer)
         {
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
-                return 1;
+                _rv = Mathf.Clamp01(_rv * 1.33f + Sensitivity * Time.deltaTime);
+                return _rv;
+            }
+            else
+            {  
+                _rv = Mathf.Clamp01(Mathf.Abs(_rv) - Sensitivity * Time.fixedDeltaTime) * Mathf.Sign(_rv);
+                return _rv;
             }
         }
         return 0;
     }
-    public int GetMovingLeft()
+    public float GetMovingLeft()
     {
         if (!lockPlayer)
         {
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
-                return 1;
+                _lv = Mathf.Clamp01(_lv * 1.33f + Sensitivity * Time.deltaTime);
+                return _lv;
+            }
+            else
+            {
+                _lv = Mathf.Clamp01(Mathf.Abs(_lv) - Sensitivity * Time.fixedDeltaTime) * Mathf.Sign(_lv);
+                return _lv;
             }
         }
         return 0;
