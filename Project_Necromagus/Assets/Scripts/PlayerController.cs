@@ -38,6 +38,9 @@ public class PlayerController : MonoBehaviour
     
 
     private bool _coroutineRunning;
+
+    [Header("Debug")]
+    public bool USE_FIXED_INPUT_DEBUG;
     
     private void Awake()
     {
@@ -69,11 +72,11 @@ public class PlayerController : MonoBehaviour
         Vector2 moveDirection = new Vector2(0f, 0f);
         if (_playerControls.GetMovingUp())
             HandleJump();
-        //var veloc = 0.0f;
-        //Debug.Log(Mathf.SmoothDamp(1f, 0f, ref veloc, 0.3f));
-        //moveDirection.x = -Mathf.SmoothDamp(_playerControls.GetMovingLeft(), 0f, ref JumpAndFallVelocity, 0.3f) + Mathf.SmoothDamp(_playerControls.GetMovingRight(), 0f, ref JumpAndFallVelocity, 0.3f);
-        moveDirection.x = -(_playerControls.GetMovingLeft()) + (_playerControls.GetMovingRight());
-        //Debug.Log(Mathf.Sign(moveDirection.x));
+        if(USE_FIXED_INPUT_DEBUG)
+            moveDirection.x = -(_playerControls.GetMovingLeftSnap()) + (_playerControls.GetMovingRightSnap());
+        else
+            moveDirection.x = -(_playerControls.GetMovingLeft()) + (_playerControls.GetMovingRight());
+        
         if(Mathf.Sign(moveDirection.x) == -1f)
             HandleLean(true, Lean2);
         if (Mathf.Sign(moveDirection.x) == 1f && moveDirection.x != 0f) 

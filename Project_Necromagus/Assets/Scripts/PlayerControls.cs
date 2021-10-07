@@ -76,6 +76,7 @@ public class PlayerControls : MonoBehaviour
         }
         return 0;
     }
+
     public float GetMovingLeft()
     {
         if (!lockPlayer)
@@ -93,6 +94,31 @@ public class PlayerControls : MonoBehaviour
         }
         return 0;
     }
+    
+    public int GetMovingRightSnap()
+    {
+        if (!lockPlayer)
+        {
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    public int GetMovingLeftSnap()
+    {
+        if (!lockPlayer)
+        {
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    
     
     public bool RespawnKey()
     {
