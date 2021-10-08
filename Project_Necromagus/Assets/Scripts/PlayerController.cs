@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rigidbody2D;
     private Transform _childTransform;
     private SpriteRenderer _childSpriteRenderer;
-    public Animator _childAnimator;
     
 
     private bool _coroutineRunning;
@@ -46,17 +45,12 @@ public class PlayerController : MonoBehaviour
         Collider2D = GetComponent<Collider2D>();
         _childTransform = transform.GetChild(0).GetComponent<Transform>();
         _childSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
-<<<<<<< Updated upstream
         
-=======
-        _childAnimator = transform.GetChild(0).GetComponent<Animator>();
->>>>>>> Stashed changes
     }
     
     private void Start()
     {
         _playerControls = PlayerControls.Instance;
-        _childAnimator.SetBool("IsIdle", true);
     }
 
     private void FixedUpdate()
@@ -75,28 +69,9 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 moveDirection = new Vector2(0, 0);
         if (_playerControls.GetMovingUp())
-        {
             HandleJump();
-<<<<<<< Updated upstream
         moveDirection.x = -(_playerControls.GetMovingLeft()) + (_playerControls.GetMovingRight());
         if(moveDirection.x == -1)
-=======
-            _childAnimator.SetBool("IsIdle", false);
-            _childAnimator.SetBool("IsRunning", false);
-            _childAnimator.SetBool("IsJumping", true);
-        }
-        if (USE_FIXED_INPUT_DEBUG)
-        {
-            moveDirection.x = -(_playerControls.GetMovingLeftSnap()) + (_playerControls.GetMovingRightSnap());
-         
-        }
-        else
-        {
-            moveDirection.x = -(_playerControls.GetMovingLeft()) + (_playerControls.GetMovingRight());
-
-        }
-        if(Mathf.Sign(moveDirection.x) == -1f)
->>>>>>> Stashed changes
             HandleLean(true, Lean2);
         if(moveDirection.x == 1)
             HandleLean(false, Lean);
@@ -107,7 +82,6 @@ public class PlayerController : MonoBehaviour
         }
         _moveTowardsPos = new Vector2(moveDirection.x * _movingSpeed * JumpingSpeed, JumpAndFallVelocity);
         _rigidbody2D.velocity = _moveTowardsPos;
-        
     }
 
     private void HandleLean(bool flipX, Vector3 lean)
@@ -153,7 +127,6 @@ public class PlayerController : MonoBehaviour
             JumpAndFallVelocity += (Gravity * _movingSpeed/2) * Time.deltaTime;
         else if (CheckIfGrounded())
         {
-            _childAnimator.SetBool("IsJumping", false);
             if (JumpAndFallVelocity <= 0f)
             {
                 ResetJumpVariablesAndCr();
