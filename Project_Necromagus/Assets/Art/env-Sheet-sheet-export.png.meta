@@ -1,5 +1,6 @@
 fileFormatVersion: 2
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 guid: 27a40ff7547ef3948a7a949979fb2156
 =======
 <<<<<<< Updated upstream:Project_Necromagus/Assets/Art/146880.jpg.meta
@@ -7,6 +8,9 @@ guid: f36eba5366f731b46a2166144c919134
 =======
 guid: 27a40ff7547ef3948a7a949979fb2156
 >>>>>>> Stashed changes:Project_Necromagus/Assets/Art/env-Sheet-sheet-export.png.meta
+>>>>>>> Stashed changes
+=======
+guid: 27a40ff7547ef3948a7a949979fb2156
 >>>>>>> Stashed changes
 TextureImporter:
   internalIDToNameTable: []
@@ -41,9 +45,13 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     filterMode: 0
 =======
     filterMode: 1
+>>>>>>> Stashed changes
+=======
+    filterMode: 0
 >>>>>>> Stashed changes
     aniso: 1
     mipBias: 0
@@ -59,9 +67,13 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   spritePixelsToUnits: 16
 =======
   spritePixelsToUnits: 100
+>>>>>>> Stashed changes
+=======
+  spritePixelsToUnits: 16
 >>>>>>> Stashed changes
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
