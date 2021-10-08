@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
         Collider2D = GetComponent<Collider2D>();
         _childTransform = transform.GetChild(0).GetComponent<Transform>();
         _childSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        _childAnimator = transform.GetChild(0).GetComponent<Animator>()
+        _childAnimator = transform.GetChild(0).GetComponent<Animator>();
     }
     
     private void Start()
