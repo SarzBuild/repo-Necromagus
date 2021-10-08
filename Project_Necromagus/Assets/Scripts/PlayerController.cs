@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public float JumpingSpeed = 1f;
     public LayerMask GroundLayerMask;
     public float ExtraDistanceValue = 0.34f;
-    private float _movingSpeed = 4;
+    public float MovingSpeed = 4;
     private Vector3 _moveTowardsPos;
     
     [Header("Sprite Leaning")]
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         {
             ResetLeanRotation();
         }
-        _moveTowardsPos = new Vector2(moveDirection.x * _movingSpeed * JumpingSpeed, JumpAndFallVelocity);
+        _moveTowardsPos = new Vector2(moveDirection.x * MovingSpeed * JumpingSpeed, JumpAndFallVelocity);
         _rigidbody2D.velocity = _moveTowardsPos;
     }
 
@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
         if (CheckCeilingCollision())
             ResetJumpVariablesAndCr();
         if (!CheckIfGrounded())
-            JumpAndFallVelocity += (Gravity * _movingSpeed/2) * Time.deltaTime;
+            JumpAndFallVelocity += (Gravity * MovingSpeed/2) * Time.deltaTime;
         else if (CheckIfGrounded())
         {
             if (JumpAndFallVelocity <= 0f)
@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviour
             if (JumpAndFallVelocity < 0.1)
             {
                 StartCoroutine(DecreaseJumpSpeedIEnumerator());
-                JumpAndFallVelocity += (_movingSpeed * JumpForce) * 0.2f;
+                JumpAndFallVelocity += (MovingSpeed * JumpForce) * 0.2f;
             }
         }
     }
