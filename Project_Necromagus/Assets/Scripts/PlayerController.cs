@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rigidbody2D;
     private Transform _childTransform;
     private SpriteRenderer _childSpriteRenderer;
-    
+    private Animator _childAnimator;
 
     private bool _coroutineRunning;
 
@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
         Collider2D = GetComponent<Collider2D>();
         _childTransform = transform.GetChild(0).GetComponent<Transform>();
         _childSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        _childAnimator = transform.GetChild(0).GetComponent<Animator>();
     }
     
     private void Start()
@@ -233,4 +234,36 @@ public class PlayerController : MonoBehaviour
     {
         return CollisionCheck(0f, Vector2.up, ExtraDistanceValue).collider != null;
     }
+    private void HandleAnimator()
+    {
+        if (_playerControls.lockPlayer)
+        {
+            _childAnimator.SetBool("IsJumping", false);
+            _childAnimator.SetBool("IsIdle", false);
+            _childAnimator.SetBool("IsRunning", false);
+            _childAnimator.SetBool("IsDead", true);
+        }
+        else if (!CheckIfGrounded())
+        {
+            _childAnimator.SetBool("IsJumping", true);
+            _childAnimator.SetBool("IsIdle", false);
+            _childAnimator.SetBool("IsRunning", false);
+            _childAnimator.SetBool("IsDead", false);
+        }
+        else if (_rigidbody2D.velocity.x == 0)
+        {
+            _childAnimator.SetBool("IsJumping", false);
+            _childAnimator.SetBool("IsIdle", true);
+            _childAnimator.SetBool("IsRunning", false);
+            _childAnimator.SetBool("IsDead", false);
+        }
+        else
+        {
+            _childAnimator.SetBool("IsJumping", false);
+            _childAnimator.SetBool("IsIdle", false);
+            _childAnimator.SetBool("IsRunning", true);
+            _childAnimator.SetBool("IsDead", false);
+        }
+    }
+
 }
