@@ -883,12 +883,12 @@ TextureImporter:
       name: env-Sheet-sheet_66
       rect:
         serializedVersion: 2
-        x: 272
+        x: 276
         y: 64
-        width: 16
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        width: 8
+        height: 22
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -904,12 +904,12 @@ TextureImporter:
       name: env-Sheet-sheet_67
       rect:
         serializedVersion: 2
-        x: 304
+        x: 308
         y: 64
-        width: 16
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        width: 8
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -925,12 +925,12 @@ TextureImporter:
       name: env-Sheet-sheet_68
       rect:
         serializedVersion: 2
-        x: 336
+        x: 340
         y: 64
-        width: 16
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        width: 8
+        height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

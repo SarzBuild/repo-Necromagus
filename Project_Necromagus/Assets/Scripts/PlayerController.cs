@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         CheckForInteractionObject();
+        HandleAnimator();
     }
 
     private void HandleMovement()

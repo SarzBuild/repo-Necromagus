@@ -11,7 +11,7 @@ public class LoopManager : MonoBehaviour
     public PlayerSwapManager PlayerSwapManager;
     public TextMeshProUGUI RestartLoopText;
 
-    private void Awake()
+    private void Start()
     {
         PlayerControls = PlayerControls.Instance;
     }
