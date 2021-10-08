@@ -156,6 +156,15 @@ public class PlayerControls : MonoBehaviour
         return false;
     }
 
+    public bool ChangeWalking()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            return true;
+        }
+        return false; 
+    }
+
     public bool GetEscape()
     {
         if (Input.GetKey(KeyCode.Escape))

@@ -21,7 +21,7 @@ public class Timer : MonoBehaviour
         timer = currentMaxTime;
     }
     
-    private void Update()
+    private void FixedUpdate()
     {
         Countdown();
     }
@@ -30,7 +30,7 @@ public class Timer : MonoBehaviour
     {
         if (timer > 0)
         {
-            timer -= Time.deltaTime;
+            timer -= Time.fixedDeltaTime;
             timerText.text = timer.ToString("00");
         }
     }

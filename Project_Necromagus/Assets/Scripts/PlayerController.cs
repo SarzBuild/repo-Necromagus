@@ -67,6 +67,15 @@ public class PlayerController : MonoBehaviour
     {
         CheckForInteractionObject();
         HandleAnimator();
+
+        /*if (_playerControls.ChangeWalking())
+        {
+            USE_FIXED_INPUT_DEBUG = true;
+            if (USE_FIXED_INPUT_DEBUG)
+            {
+                USE_FIXED_INPUT_DEBUG = false;
+            }
+        }*/
     }
 
     private void HandleMovement()
@@ -74,10 +83,10 @@ public class PlayerController : MonoBehaviour
         Vector2 moveDirection = new Vector2(0f, 0f);
         if (_playerControls.GetMovingUp())
             HandleJump();
-        if(USE_FIXED_INPUT_DEBUG)
-            moveDirection.x = -(_playerControls.GetMovingLeftSnap()) + (_playerControls.GetMovingRightSnap());
-        else
-            moveDirection.x = -(_playerControls.GetMovingLeft()) + (_playerControls.GetMovingRight());
+        
+        moveDirection.x = -(_playerControls.GetMovingLeftSnap()) + (_playerControls.GetMovingRightSnap());
+        /*else
+            moveDirection.x = -(_playerControls.GetMovingLeft()) + (_playerControls.GetMovingRight());*/
         
         if(Mathf.Sign(moveDirection.x) == -1f)
             HandleLean(true, Lean2);
