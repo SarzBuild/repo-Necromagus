@@ -6,14 +6,20 @@ using UnityEngine;
 public class Timer : MonoBehaviour
 {
     private TextMeshProUGUI timerText;
+    private PlayerControls _playerControls;
+    private bool _startTime;
     public float timer;
     public int currentMaxTime;
-    
     
     private void Awake()
     {
         timerText = GetComponent<TextMeshProUGUI>();
         OnLoopStart();
+    }
+
+    private void Start()
+    {
+        _playerControls = PlayerControls.Instance;
     }
 
     public void OnLoopStart()
@@ -23,7 +29,15 @@ public class Timer : MonoBehaviour
     
     private void FixedUpdate()
     {
-        Countdown();
+        if (_playerControls.GetMovingRightSnap() == 1 || _playerControls.GetMovingLeftSnap() == 1 ||
+            _playerControls.GetMovingUp())
+        {
+            _startTime = true;
+        }
+        if (_startTime)
+        {
+            Countdown();
+        }
     }
 
     private void Countdown()

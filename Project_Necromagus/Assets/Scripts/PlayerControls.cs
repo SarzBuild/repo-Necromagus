@@ -13,7 +13,8 @@ public class PlayerControls : MonoBehaviour
     public int TimeLoopCount;
     private float _rv;
     private float _lv;
-    public float Sensitivity;
+    public Transform PlayerTransformPoint1;
+    public Transform PlayerTransformPoint2;
 
     private static PlayerControls _instance;
     public static PlayerControls Instance { get { return _instance; } }
@@ -51,7 +52,7 @@ public class PlayerControls : MonoBehaviour
     {
         if (!lockPlayer)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Space))
             {
                 return true;
             }
@@ -59,7 +60,19 @@ public class PlayerControls : MonoBehaviour
         return false;
     }
 
-    public float GetMovingRight()
+    public bool GetMovingDown()
+    {
+        if (!lockPlayer)
+        {
+            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*public float GetMovingRight()
     {
         if (!lockPlayer)
         {
@@ -93,7 +106,7 @@ public class PlayerControls : MonoBehaviour
             }
         }
         return 0;
-    }
+    }*/
     
     public int GetMovingRightSnap()
     {
@@ -118,13 +131,12 @@ public class PlayerControls : MonoBehaviour
         }
         return 0;
     }
-    
-    
+
     public bool RespawnKey()
     {
         if (!respawnLock)
         {
-            if (Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 return true;
             }
@@ -143,31 +155,10 @@ public class PlayerControls : MonoBehaviour
         }
         return false;
     }
-    
-    public bool GetInteraction()
-    {
-        if (!lockPlayer)
-        {
-            if (Input.GetKey(KeyCode.Space))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public bool ChangeWalking()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            return true;
-        }
-        return false; 
-    }
 
     public bool GetEscape()
     {
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             return true;
         }

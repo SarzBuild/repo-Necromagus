@@ -44,7 +44,6 @@ public class PauseMenuManager : MonoBehaviour
         _playerControls.lockPlayer = true;
         Time.timeScale = 0;
         yield return new WaitWhile(() => _playerControls.GetEscape());
-        Resume();
     }
 
     private void ShowMenu()

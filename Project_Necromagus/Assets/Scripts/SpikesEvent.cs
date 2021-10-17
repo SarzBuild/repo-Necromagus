@@ -43,7 +43,7 @@ public class SpikesEvent : CollisionDetectionDependency
     
     private bool DetectedSomething()
     {
-        if (CheckForObject(_collider2D, PlayerLayerMask, RayMaxDist).collider != null)
+        if (CheckForObject(_collider2D, Vector2.down, PlayerLayerMask, RayMaxDist).collider != null)
             return true;
         else
             return false;
